@@ -25,6 +25,18 @@ func main() {
 		}
 
 		if msg != nil {
+			delivered, err := msg.Sub.Delivered()
+			if err != nil {
+				fmt.Println("Delivered error message in : ", err.Error())
+			}
+			fmt.Println("Delivered message in : ", delivered, "subscribers")
+
+			fmt.Println("Queue in :", msg.Sub.Queue)
+			fmt.Println("Type in :", msg.Sub.Type())
+			fmt.Println("Reply in :", msg.Reply)
+			fmt.Println("Header in :", msg.Header)
+			fmt.Println("Subject in :", msg.Sub.Subject)
+
 			shouldResponse := "Done"
 			if string(msg.Data) == shouldResponse {
 				fmt.Println("Response as we need : ", i)
@@ -35,7 +47,8 @@ func main() {
 			fmt.Println("No responder, still waiting...")
 		}
 
+		fmt.Println("")
 		i++
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
 	}
 }

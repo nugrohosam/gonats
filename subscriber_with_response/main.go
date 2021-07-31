@@ -21,7 +21,6 @@ func main() {
 		t := time.Now()
 		fmt.Printf("%s when %s\n", t.Format("2006-01-02 15:04:05"), (m.Data))
 		m.Respond([]byte("Done"))
-		m.Respond([]byte("Done 12"))
 	})
 
 	time.Sleep(1 * time.Minute)

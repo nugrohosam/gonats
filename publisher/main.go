@@ -10,7 +10,13 @@ import (
 
 func main() {
 	// Connect to a server
-	nc, _ := nats.Connect(nats.DefaultURL)
+	servers := "nats://localhost:4222, nats://localhost:6222, nats://localhost:8222"
+	nc, err := nats.Connect(servers)
+
+	if err != nil {
+		fmt.Println("Some error happen")
+		return
+	}
 
 	i := 0
 	for {
@@ -37,18 +43,14 @@ func main() {
 			fmt.Println("Header in :", msg.Header)
 			fmt.Println("Subject in :", msg.Sub.Subject)
 
-			shouldResponse := "Done"
-			if string(msg.Data) == shouldResponse {
-				fmt.Println("Response as we need : ", i)
-			} else {
-				fmt.Println("Response is not what we need : ", i)
-			}
+			fmt.Println("Response is :", string(msg.Data), "from", nc.ConnectedUrl())
 		} else {
-			fmt.Println("No responder, still waiting...")
+			fmt.Println("No responder, still waiting...", nc.ConnectedUrl())
 		}
 
-		fmt.Println("")
 		i++
+		fmt.Println("Run at scale number", i)
+		fmt.Println("")
 		time.Sleep(500 * time.Millisecond)
 	}
 }

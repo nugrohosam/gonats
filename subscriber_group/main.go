@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"time"
 
@@ -9,17 +10,21 @@ import (
 
 func main() {
 	// Connect to a server
-	nc, err := nats.Connect(nats.DefaultURL)
+	servers := "nats://localhost:4222, nats://localhost:6222, nats://localhost:8222"
+	nc, err := nats.Connect(servers)
 
 	if err != nil {
 		fmt.Println("Some error happen")
 		return
 	}
 
+	scaleNumber := flag.String("scale", "1", "--")
+	flag.Parse()
+
 	// Simple Async Subscriber
 	nc.QueueSubscribe("foo", "group_type", func(m *nats.Msg) {
-		t := time.Now()
-		fmt.Printf("%s when %s\n", t.Format("2006-01-02 15:04:05"), (m.Data))
+		fmt.Println("Here :", *scaleNumber, "from", m.Sub.Queue)
+		m.Respond([]byte("Number of scale : " + *scaleNumber))
 	})
 
 	time.Sleep(4 * time.Minute)

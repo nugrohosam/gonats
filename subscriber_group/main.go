@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Connect to a server
-	servers := "nats://localhost:4222, nats://localhost:6222, nats://localhost:8222"
+	servers := "nats://localhost:4222"
 	nc, err := nats.Connect(servers)
 
 	if err != nil {
@@ -23,7 +23,7 @@ func main() {
 
 	// Simple Async Subscriber
 	nc.QueueSubscribe("foo", "group_type", func(m *nats.Msg) {
-		fmt.Println("Here :", *scaleNumber, "from", m.Sub.Queue)
+		fmt.Println("Here :", *scaleNumber, "from", m.Sub.Queue, string(m.Data))
 		m.Respond([]byte("Number of scale : " + *scaleNumber))
 	})
 
